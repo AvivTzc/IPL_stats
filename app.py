@@ -29,16 +29,19 @@ def get_combined_data():
                 stats_df = pd.DataFrame(stats_data["data"].values())
                 players_df = pd.DataFrame(players_data["data"].values())
 
-                # התאמת שם השחקן לפי `instatId`
+                # התאמת שם השחקן לפי `_id`
                 combined_df = stats_df.merge(
-                    players_df[["instatId", "firstName", "lastName"]], 
+                    players_df[["_id", "firstName", "lastName"]], 
                     how="left", 
-                    left_on="instatId", 
-                    right_on="instatId"
+                    left_on="_id", 
+                    right_on="_id"
                 )
 
-                # הוספת עמודת "fullName" משם פרטי ושם משפחה
+                # הוספת עמודת שם מלא באנגלית
                 combined_df["fullName"] = combined_df["firstName"] + " " + combined_df["lastName"]
+
+                # הוספת עמודת שם מלא בעברית (דוגמה: אפשר להתאים את זה לפי צורך)
+                combined_df["fullNameHebrew"] = combined_df["firstName"] + " " + combined_df["lastName"] + " (בעברית)"
 
                 # החזרת הנתונים כ-JSON שטוח
                 return jsonify(combined_df.to_dict(orient="records"))
